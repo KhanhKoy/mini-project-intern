@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MiniShopApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a0b927c5938e32a839e2fe97b7e43a605db374e3")]
 [assembly: System.Reflection.AssemblyProductAttribute("MiniShopApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MiniShopApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

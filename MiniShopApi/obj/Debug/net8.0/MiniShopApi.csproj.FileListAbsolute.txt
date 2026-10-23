@@ -6,6 +6,7 @@ D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\MiniShopApi.deps.json
 D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\MiniShopApi.runtimeconfig.json
 D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\MiniShopApi.dll
 D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\MiniShopApi.pdb
+D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\EFCore.NamingConventions.dll
 D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\Humanizer.dll
 D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
@@ -96,6 +97,7 @@ D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\MiniShopApi.AssemblyInfo.cs
 D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\MiniShopApi.csproj.CoreCompileInputs.cache
 D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\MiniShopApi.MvcApplicationPartsAssemblyInfo.cs
 D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\MiniShopApi.MvcApplicationPartsAssemblyInfo.cache
+D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\MiniShopApi.sourcelink.json
 D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\rjimswa.dswa.cache.json
 D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
@@ -111,4 +113,3 @@ D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\refint\MiniShopApi.dll
 D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\MiniShopApi.pdb
 D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\MiniShopApi.genruntimeconfig.cache
 D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\ref\MiniShopApi.dll
-D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\EFCore.NamingConventions.dll

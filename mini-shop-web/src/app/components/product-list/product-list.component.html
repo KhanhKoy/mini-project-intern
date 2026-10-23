@@ -1,0 +1,93 @@
+<div class="product-list-container">
+  <!-- Header -->
+  <header class="page-header">
+    <h1>Danh sách sản phẩm</h1>
+    <p class="product-count">
+      {{ filteredProducts().length }} / {{ products().length }} sản phẩm
+    </p>
+  </header>
+
+  <!-- Category Filter -->
+  <section class="filter-section" aria-label="Bộ lọc danh mục">
+    <div class="filter-chips">
+      <button
+        class="filter-chip"
+        [class.active]="selectedCategoryId() === null"
+        (click)="clearFilter()"
+        [attr.aria-pressed]="selectedCategoryId() === null"
+      >
+        Tất cả
+      </button>
+      @for (category of categories(); track category.id) {
+        <button
+          class="filter-chip"
+          [class.active]="selectedCategoryId() === category.id"
+          (click)="onCategoryChange(category.id)"
+          [attr.aria-pressed]="selectedCategoryId() === category.id"
+        >
+          {{ category.name }}
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state" role="status" aria-live="polite">
+      <div class="spinner"></div>
+      <p>Đang tải sản phẩm...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error()) {
+    <div class="error-state" role="alert">
+      <p>{{ error() }}</p>
+      <button class="btn-retry" (click)="loadProducts()">Thử lại</button>
+    </div>
+  }
+
+  <!-- Product Grid -->
+  @if (!loading() && !error()) {
+    @if (filteredProducts().length === 0) {
+      <div class="empty-state">
+        <p>Không có sản phẩm nào trong danh mục này.</p>
+        <button class="btn-clear" (click)="clearFilter()">Xem tất cả sản phẩm</button>
+      </div>
+    } @else {
+      <div class="product-grid" role="list" aria-label="Danh sách sản phẩm">
+        @for (product of filteredProducts(); track trackByProductId($index, product)) {
+          <article class="product-card" role="listitem">
+            <a [routerLink]="['/products', product.id]" class="product-link">
+              <div class="product-image">
+                @if (product.imageUrl) {
+                  <img [src]="product.imageUrl" [alt]="product.name" loading="lazy" />
+                } @else {
+                  <div class="image-placeholder">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                  </div>
+                }
+              </div>
+              <div class="product-info">
+                <h3 class="product-name">{{ product.name }}</h3>
+                @if (product.description) {
+                  <p class="product-description">{{ product.description }}</p>
+                }
+                <div class="product-meta">
+                  <span class="product-price">{{ product.price | currency:'VND':'symbol':'1.0-0':'vi-VN' }}</span>
+                  @if (product.categoryId) {
+                    <span class="product-category">Danh mục {{ product.categoryId }}</span>
+                  }
+                </div>
+              </div>
+            </a>
+          </article>
+        }
+      </div>
+    }
+  }
+</div>

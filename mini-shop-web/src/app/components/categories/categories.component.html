@@ -1,0 +1,66 @@
+<div class="categories-container">
+  <!-- Header -->
+  <header class="page-header">
+    <h1>Danh mục sản phẩm</h1>
+    <p class="category-count">{{ categories().length }} danh mục</p>
+  </header>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state" role="status" aria-live="polite">
+      <div class="spinner"></div>
+      <p>Đang tải danh mục...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error()) {
+    <div class="error-state" role="alert">
+      <p>{{ error() }}</p>
+      <button class="btn-retry" (click)="loadCategories()">Thử lại</button>
+    </div>
+  }
+
+  <!-- Categories Grid -->
+  @if (!loading() && !error()) {
+    @if (categories().length === 0) {
+      <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <p>Chưa có danh mục nào.</p>
+      </div>
+    } @else {
+      <div class="categories-grid" role="list" aria-label="Danh sách danh mục">
+        @for (category of categories(); track trackByCategoryId($index, category)) {
+          <article class="category-card" role="listitem">
+            <a [routerLink]="['/products']" [queryParams]="{ category: category.id }" class="category-link">
+              <div class="category-image">
+                @if (category.imageUrl) {
+                  <img [src]="category.imageUrl" [alt]="category.name" loading="lazy" />
+                } @else {
+                  <div class="image-placeholder">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                      <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                  </div>
+                }
+              </div>
+              <div class="category-info">
+                <h3 class="category-name">{{ category.name }}</h3>
+                @if (category.description) {
+                  <p class="category-description">{{ category.description }}</p>
+                }
+                <span class="product-count-badge">
+                  {{ category.productCount || 0 }} sản phẩm
+                </span>
+              </div>
+            </a>
+          </article>
+        }
+      </div>
+    }
+  }
+</div>

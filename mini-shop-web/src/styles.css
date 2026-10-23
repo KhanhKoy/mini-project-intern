@@ -1,1 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+/* Thêm phần này vào cuối file styles.css */
+/* Định dạng nút bấm cơ bản (Chung cho tất cả các trang) */
+.btn-primary {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+/* Định dạng liên kết (dùng cho "Quay lại") */
+.text-link {
+    color: #3b82f6;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.text-link:hover {
+    text-decoration: underline;
+}
