@@ -28,59 +28,33 @@
 
     <!-- Register Form -->
     <form class="auth-form" (ngSubmit)="onSubmit()" novalidate>
-      <!-- Name Fields -->
-      <div class="form-row">
-        <div class="form-group">
-          <label for="firstName" class="form-label">Họ</label>
-          <div class="input-wrapper">
-            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
-            <input
-              type="text"
-              id="firstName"
-              class="form-input"
-              [class.error]="firstName() && !isFirstNameValid()"
-              [class.success]="isFirstNameValid()"
-              [value]="firstName()"
-              (input)="firstName.set($event.target.value)"
-              (blur)="firstName.set($event.target.value)"
-              placeholder="Nguyễn"
-              autocomplete="given-name"
-              required
-              [disabled]="isLoading()"
-              aria-describedby="firstName-error"
-            >
-          </div>
-          @if (firstName() && !isFirstNameValid()) {
-            <p id="firstName-error" class="form-error">Họ phải có ít nhất 2 ký tự</p>
-          }
+      <!-- Username Field -->
+      <div class="form-group">
+        <label for="username" class="form-label">Username</label>
+        <div class="input-wrapper">
+          <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <input
+            type="text"
+            id="username"
+            class="form-input"
+            [class.error]="username() && !isUsernameValid()"
+            [class.success]="isUsernameValid()"
+            [value]="username()"
+            (input)="username.set($event.target.value)"
+            (blur)="username.set($event.target.value)"
+            placeholder="username"
+            autocomplete="username"
+            required
+            [disabled]="isLoading()"
+            aria-describedby="username-error"
+          >
         </div>
-
-        <div class="form-group">
-          <label for="lastName" class="form-label">Tên</label>
-          <div class="input-wrapper">
-            <input
-              type="text"
-              id="lastName"
-              class="form-input"
-              [class.error]="lastName() && !isLastNameValid()"
-              [class.success]="isLastNameValid()"
-              [value]="lastName()"
-              (input)="lastName.set($event.target.value)"
-              (blur)="lastName.set($event.target.value)"
-              placeholder="Văn A"
-              autocomplete="family-name"
-              required
-              [disabled]="isLoading()"
-              aria-describedby="lastName-error"
-            >
-          </div>
-          @if (lastName() && !isLastNameValid()) {
-            <p id="lastName-error" class="form-error">Tên phải có ít nhất 2 ký tự</p>
-          }
-        </div>
+        @if (username() && !isUsernameValid()) {
+          <p id="username-error" class="form-error">Username phải có ít nhất 3 ký tự</p>
+        }
       </div>
 
       <!-- Email Field -->

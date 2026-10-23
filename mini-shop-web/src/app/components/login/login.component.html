@@ -28,32 +28,32 @@
 
     <!-- Login Form -->
     <form class="auth-form" (ngSubmit)="onSubmit()" novalidate>
-      <!-- Email Field -->
+      <!-- Username or Email Field -->
       <div class="form-group">
-        <label for="email" class="form-label">Email</label>
+        <label for="identifier" class="form-label">Username hoặc Email</label>
         <div class="input-wrapper">
           <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
             <polyline points="22,6 12,13 2,6"/>
           </svg>
           <input
-            type="email"
-            id="email"
+            type="text"
+            id="identifier"
             class="form-input"
-            [class.error]="email() && !isEmailValid()"
-            [class.success]="isEmailValid()"
-            [value]="email()"
-            (input)="email.set($event.target.value)"
-            (blur)="email.set($event.target.value)"
-            placeholder="nhapemail@example.com"
-            autocomplete="email"
+            [class.error]="identifier() && !isIdentifierValid()"
+            [class.success]="isIdentifierValid()"
+            [value]="identifier()"
+            (input)="identifier.set($event.target.value)"
+            (blur)="identifier.set($event.target.value)"
+            placeholder="username hoặc email@example.com"
+            autocomplete="username"
             required
             [disabled]="isLoading()"
-            aria-describedby="email-error"
+            aria-describedby="identifier-error"
           >
         </div>
-        @if (email() && !isEmailValid()) {
-          <p id="email-error" class="form-error">Email không hợp lệ</p>
+        @if (identifier() && !isIdentifierValid()) {
+          <p id="identifier-error" class="form-error">Username hoặc Email phải có ít nhất 3 ký tự</p>
         }
       </div>
 

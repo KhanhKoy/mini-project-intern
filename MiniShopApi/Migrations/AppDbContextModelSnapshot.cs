@@ -44,7 +44,7 @@ namespace MiniShopApi.Migrations
                     b.HasKey("Id")
                         .HasName("pk_categories");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("categories", (string)null);
                 });
 
             modelBuilder.Entity("MiniShopApi.Models.Order", b =>
@@ -77,7 +77,7 @@ namespace MiniShopApi.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_orders_userid");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("orders", (string)null);
                 });
 
             modelBuilder.Entity("MiniShopApi.Models.OrderItem", b =>
@@ -115,7 +115,7 @@ namespace MiniShopApi.Migrations
                     b.HasIndex("ProductId")
                         .HasDatabaseName("ix_orderitems_productid");
 
-                    b.ToTable("OrderItems", (string)null);
+                    b.ToTable("orderitems", (string)null);
                 });
 
             modelBuilder.Entity("MiniShopApi.Models.Product", b =>
@@ -157,7 +157,7 @@ namespace MiniShopApi.Migrations
                     b.HasIndex("CategoryId")
                         .HasDatabaseName("ix_products_categoryid");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("products", (string)null);
                 });
 
             modelBuilder.Entity("MiniShopApi.Models.User", b =>
@@ -174,6 +174,12 @@ namespace MiniShopApi.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("createdat")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("email");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -198,11 +204,15 @@ namespace MiniShopApi.Migrations
                     b.HasKey("Id")
                         .HasName("pk_users");
 
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasDatabaseName("ix_users_email");
+
                     b.HasIndex("Username")
                         .IsUnique()
                         .HasDatabaseName("ix_users_username");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("MiniShopApi.Models.Order", b =>

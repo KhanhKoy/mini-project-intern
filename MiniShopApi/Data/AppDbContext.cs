@@ -31,7 +31,9 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.HasIndex(e => e.Username).IsUnique();
+            entity.HasIndex(e => e.Email).IsUnique();
             entity.Property(e => e.Username).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.Email).HasMaxLength(100).IsRequired();
             entity.Property(e => e.PasswordHash).HasMaxLength(255).IsRequired();
             entity.Property(e => e.Role).HasMaxLength(20).HasDefaultValue("Customer");
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");

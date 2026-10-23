@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MiniShopApi.Data;
+using MiniShopApi.DTOs;
 using MiniShopApi.Models;
 
 namespace MiniShopApi.Controllers;
@@ -18,10 +19,17 @@ public class CategoriesController : ControllerBase
 
     // GET: api/categories
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+    public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategories()
     {
         var categories = await _context.Categories
             .AsNoTracking()
+            .Select(c => new CategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                ProductCount = c.Products.Count
+            })
             .ToListAsync();
 
         return Ok(categories);
@@ -29,11 +37,19 @@ public class CategoriesController : ControllerBase
 
     // GET: api/categories/{id}
     [HttpGet("{id}")]
-    public async Task<ActionResult<Category>> GetCategory(int id)
+    public async Task<ActionResult<CategoryDto>> GetCategory(int id)
     {
         var category = await _context.Categories
             .AsNoTracking()
-            .FirstOrDefaultAsync(c => c.Id == id);
+            .Where(c => c.Id == id)
+            .Select(c => new CategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                ProductCount = c.Products.Count
+            })
+            .FirstOrDefaultAsync();
 
         if (category == null)
         {

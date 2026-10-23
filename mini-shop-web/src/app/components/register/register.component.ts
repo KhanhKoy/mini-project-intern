@@ -2,7 +2,7 @@ import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, RegisterRequest } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -16,8 +16,7 @@ export class RegisterComponent {
   private router = inject(Router);
 
   // Form signals
-  firstName = signal('');
-  lastName = signal('');
+  username = signal('');
   email = signal('');
   password = signal('');
   confirmPassword = signal('');
@@ -26,8 +25,7 @@ export class RegisterComponent {
   error = signal<string | null>(null);
 
   // Computed validation
-  isFirstNameValid = computed(() => this.firstName().trim().length >= 2);
-  isLastNameValid = computed(() => this.lastName().trim().length >= 2);
+  isUsernameValid = computed(() => this.username().trim().length >= 3);
   isEmailValid = computed(() => {
     const email = this.email();
     return email.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -37,8 +35,7 @@ export class RegisterComponent {
   isAgreeTermsValid = computed(() => this.agreeTerms());
 
   isFormValid = computed(() =>
-    this.isFirstNameValid() &&
-    this.isLastNameValid() &&
+    this.isUsernameValid() &&
     this.isEmailValid() &&
     this.isPasswordValid() &&
     this.isConfirmPasswordValid() &&
@@ -84,12 +81,13 @@ export class RegisterComponent {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.authService.register({
-      firstName: this.firstName().trim(),
-      lastName: this.lastName().trim(),
+    const registerData: RegisterRequest = {
+      username: this.username().trim(),
       email: this.email().trim().toLowerCase(),
       password: this.password()
-    }).subscribe({
+    };
+
+    this.authService.register(registerData).subscribe({
       next: (response) => {
         this.isLoading.set(false);
         if (response.success) {

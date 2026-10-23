@@ -113,3 +113,12 @@ D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\refint\MiniShopApi.dll
 D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\MiniShopApi.pdb
 D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\MiniShopApi.genruntimeconfig.cache
 D:\MiniShopProject\MiniShopApi\obj\Debug\net8.0\ref\MiniShopApi.dll
+D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\MiniShopProject\MiniShopApi\bin\Debug\net8.0\BCrypt-Net-Next.dll

@@ -3,14 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface LoginRequest {
-  email: string;
+  identifier: string;
   password: string;
   rememberMe?: boolean;
 }
 
 export interface RegisterRequest {
-  firstName: string;
-  lastName: string;
+  username: string;
   email: string;
   password: string;
 }
@@ -21,10 +20,9 @@ export interface AuthResponse {
   token?: string;
   user?: {
     id: number;
-    firstName: string;
-    lastName: string;
+    username: string;
     email: string;
-    roles?: string[];
+    role: string;
   };
 }
 
@@ -57,7 +55,7 @@ export class AuthService {
     return !!this.getToken();
   }
 
-  getCurrentUser(): { id: number; firstName: string; lastName: string; email: string; roles?: string[] } | null {
+  getCurrentUser(): { id: number; username: string; email: string; role: string } | null {
     const userStr = localStorage.getItem('user');
     if (userStr) {
       try {

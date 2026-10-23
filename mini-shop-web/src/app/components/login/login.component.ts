@@ -2,7 +2,7 @@ import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, LoginRequest } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -16,21 +16,18 @@ export class LoginComponent {
   private router = inject(Router);
 
   // Form signals
-  email = signal('');
+  identifier = signal('');
   password = signal('');
   rememberMe = signal(false);
   isLoading = signal(false);
   error = signal<string | null>(null);
 
   // Computed validation
-  isEmailValid = computed(() => {
-    const email = this.email();
-    return email.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  });
+  isIdentifierValid = computed(() => this.identifier().trim().length >= 3);
 
   isPasswordValid = computed(() => this.password().length >= 6);
 
-  isFormValid = computed(() => this.isEmailValid() && this.isPasswordValid());
+  isFormValid = computed(() => this.isIdentifierValid() && this.isPasswordValid());
 
   onSubmit(): void {
     if (!this.isFormValid()) {
@@ -41,8 +38,8 @@ export class LoginComponent {
     this.isLoading.set(true);
     this.error.set(null);
 
-    const credentials = {
-      email: this.email(),
+    const credentials: LoginRequest = {
+      identifier: this.identifier().trim(),
       password: this.password(),
       rememberMe: this.rememberMe()
     };
