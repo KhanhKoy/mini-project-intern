@@ -1,7 +1,8 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { ProductService, Product } from '../../services/product.service';
+import { RouterLink, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { ProductService, Product, Category } from '../../services/product.service';
 
 @Component({
   selector: 'app-product-list',
@@ -12,10 +13,12 @@ import { ProductService, Product } from '../../services/product.service';
 })
 export class ProductListComponent implements OnInit {
   private productService = inject(ProductService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   // Signals for reactive state
   products = signal<Product[]>([]);
-  categories = signal<{ id: number; name: string }[]>([]);
+  categories = signal<Category[]>([]);
   selectedCategoryId = signal<number | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
@@ -29,7 +32,17 @@ export class ProductListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProducts();
-    this.extractCategories();
+    this.loadCategories();
+
+    // Subscribe to queryParams to get categoryId from URL
+    this.route.queryParams.subscribe(params => {
+      const categoryId = params['categoryId'] ? Number(params['categoryId']) : null;
+      if (categoryId !== null) {
+        this.selectedCategoryId.set(categoryId);
+      } else {
+        this.selectedCategoryId.set(null);
+      }
+    });
   }
 
   loadProducts(): void {
@@ -49,26 +62,44 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  extractCategories(): void {
-    // Extract unique categories from products
-    const cats = new Map<number, string>();
-    this.products().forEach(p => {
-      if (p.categoryId && !cats.has(p.categoryId)) {
-        cats.set(p.categoryId, `Danh mục ${p.categoryId}`); // Will be improved if we have category names
+  loadCategories(): void {
+    this.productService.getCategories().subscribe({
+      next: (data) => {
+        this.categories.set(data);
+      },
+      error: (err) => {
+        console.error('Error loading categories:', err);
       }
     });
-    this.categories.set(Array.from(cats.entries()).map(([id, name]) => ({ id, name })));
   }
 
   onCategoryChange(categoryId: number | null): void {
     this.selectedCategoryId.set(categoryId);
+    // Update URL query params without reloading
+    if (categoryId !== null) {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { categoryId },
+        queryParamsHandling: 'merge'
+      });
+    } else {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { categoryId: null },
+        queryParamsHandling: 'merge'
+      });
+    }
   }
 
   clearFilter(): void {
-    this.selectedCategoryId.set(null);
+    this.onCategoryChange(null);
   }
 
   trackByProductId(index: number, product: Product): number {
     return product.id;
+  }
+
+  trackByCategoryId(index: number, category: Category): number {
+    return category.id;
   }
 }

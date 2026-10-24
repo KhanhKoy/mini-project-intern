@@ -48,10 +48,10 @@
                     <line x1="8" y1="2" x2="8" y2="6"/>
                     <line x1="3" y1="10" x2="21" y2="10"/>
                   </svg>
-                  {{ order.createdAt | date:'dd/MM/yyyy HH:mm':'':'vi-VN' }}
+                  {{ formatOrderDate(order.orderDate) }}
                 </span>
-                <span class="order-status" [class]="getStatusClass(order.status)">
-                  {{ getStatusLabel(order.status) }}
+                <span class="order-status" [class]="getStatusClass(order)">
+                  {{ getStatusLabel(order) }}
                 </span>
               </div>
             </div>
@@ -61,7 +61,7 @@
           </div>
 
           <div class="order-items-preview">
-            @for (item of order.items.slice(0, 3); track item.productId) {
+            @for (item of order.orderItems.slice(0, 3); track item.productId) {
               <div class="order-item-mini">
                 @if (item.product?.imageUrl) {
                   <img [src]="item.product.imageUrl" [alt]="item.product.name" loading="lazy" />
@@ -71,8 +71,8 @@
                 <span class="item-qty">x{{ item.quantity }}</span>
               </div>
             }
-            @if (order.items.length > 3) {
-              <span class="more-items">+{{ order.items.length - 3 }} sản phẩm khác</span>
+            @if (order.orderItems.length > 3) {
+              <span class="more-items">+{{ order.orderItems.length - 3 }} sản phẩm khác</span>
             }
           </div>
 
@@ -80,16 +80,10 @@
             <button class="btn-detail" [routerLink]="['/orders', order.id]">
               Xem chi tiết
             </button>
-            @if (order.status === 'pending' || order.status === 'processing') {
-              <button class="btn-cancel" (click)="cancelOrder(order.id)">
-                Hủy đơn hàng
-              </button>
-            }
-            @if (order.status === 'delivered') {
-              <button class="btn-reorder" [routerLink]="['/products']">
-                Mua lại
-              </button>
-            }
+            <!-- Backend doesn't have status field - show cancel for all orders for now -->
+            <button class="btn-cancel" (click)="cancelOrder(order.id)">
+              Hủy đơn hàng
+            </button>
           </div>
         </article>
       }

@@ -1,13 +1,16 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MiniShopApi.Data;
 using MiniShopApi.DTOs;
 using MiniShopApi.Models;
+using System.Security.Claims;
 
 namespace MiniShopApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class OrdersController : ControllerBase
 {
     private readonly AppDbContext _context;
@@ -15,6 +18,15 @@ public class OrdersController : ControllerBase
     public OrdersController(AppDbContext context)
     {
         _context = context;
+    }
+
+    // Helper to get current user ID from JWT token
+    private int GetCurrentUserId()
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? User.FindFirstValue("id")
+            ?? User.FindFirstValue("sub");
+        return int.TryParse(userIdClaim, out var userId) ? userId : 0;
     }
 
     // POST: api/orders
@@ -49,7 +61,10 @@ public class OrdersController : ControllerBase
         {
             UserId = request.UserId,
             OrderDate = DateTime.UtcNow,
-            TotalAmount = 0
+            TotalAmount = 0,
+            FullName = request.FullName,
+            ShippingAddress = request.ShippingAddress,
+            PhoneNumber = request.PhoneNumber
         };
 
         decimal totalAmount = 0;
@@ -99,8 +114,30 @@ public class OrdersController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Order>>> GetAllOrders()
     {
+        var currentUserId = GetCurrentUserId();
+        if (currentUserId == 0)
+        {
+            return Unauthorized(new { message = "Không thể xác định người dùng từ token." });
+        }
+
         var orders = await _context.Orders
+            .Where(o => o.UserId == currentUserId)
             .Include(o => o.User)
+            .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+            .AsNoTracking()
+            .OrderByDescending(o => o.OrderDate)
+            .ToListAsync();
+
+        return Ok(orders);
+    }
+
+    // GET: api/orders/user/{userId}
+    [HttpGet("user/{userId:int}")]
+    public async Task<ActionResult<IEnumerable<Order>>> GetOrdersByUserId(int userId)
+    {
+        var orders = await _context.Orders
+            .Where(o => o.UserId == userId)
             .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
             .AsNoTracking()

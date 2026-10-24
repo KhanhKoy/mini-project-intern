@@ -27,7 +27,7 @@ export class CartComponent implements OnInit {
     this.cartItems().reduce((sum, item) => sum + item.quantity, 0)
   );
 
-  shippingFee = signal(30000); // Fixed shipping fee
+  shippingFee = signal(0); // Fixed shipping fee
 
   total = computed(() => this.subtotal() + this.shippingFee());
 

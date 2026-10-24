@@ -1,7 +1,8 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { OrderService, Order } from '../../services/order.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-orders',
@@ -12,6 +13,8 @@ import { OrderService, Order } from '../../services/order.service';
 })
 export class OrdersComponent implements OnInit {
   private orderService = inject(OrderService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   // Signals for reactive state
   orders = signal<Order[]>([]);
@@ -23,10 +26,23 @@ export class OrdersComponent implements OnInit {
   }
 
   loadOrders(): void {
+    // Get current user from AuthService signal
+    const currentUser = this.authService.currentUser();
+
+    // If user not logged in, redirect to login
+    if (!currentUser) {
+      this.error.set('Vui lòng đăng nhập để xem lịch sử đơn hàng.');
+      this.loading.set(false);
+      this.router.navigate(['/login'], { queryParams: { returnUrl: '/orders' } });
+      return;
+    }
+
+    const userId = currentUser.id;
     this.loading.set(true);
     this.error.set(null);
 
-    this.orderService.getOrders().subscribe({
+    // Call new API endpoint: GET /api/orders/user/{userId}
+    this.orderService.getOrdersByUser(userId).subscribe({
       next: (data) => {
         this.orders.set(data);
         this.loading.set(false);
@@ -39,7 +55,9 @@ export class OrdersComponent implements OnInit {
     });
   }
 
-  getStatusClass(status: string): string {
+  // Backend now returns status field - use it
+  getStatusClass(order: Order): string {
+    const status = (order as any).status || 'pending';
     const statusClasses: Record<string, string> = {
       'pending': 'status-pending',
       'processing': 'status-processing',
@@ -50,7 +68,8 @@ export class OrdersComponent implements OnInit {
     return statusClasses[status] || 'status-unknown';
   }
 
-  getStatusLabel(status: string): string {
+  getStatusLabel(order: Order): string {
+    const status = (order as any).status || 'pending';
     const statusLabels: Record<string, string> = {
       'pending': 'Chờ xử lý',
       'processing': 'Đang xử lý',
@@ -63,6 +82,17 @@ export class OrdersComponent implements OnInit {
 
   trackByOrderId(index: number, order: Order): number {
     return order.id;
+  }
+
+  // Use order.orderDate (string) instead of order.createdAt (Date)
+  formatOrderDate(orderDate: string): string {
+    return new Date(orderDate).toLocaleString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 
   cancelOrder(orderId: number): void {

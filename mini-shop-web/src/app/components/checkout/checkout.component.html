@@ -1,0 +1,172 @@
+<div class="checkout-container">
+  <div class="checkout-header">
+    <h1>Thanh toán</h1>
+    <p>Điền thông tin giao hàng để hoàn tất đơn hàng</p>
+  </div>
+
+  @if (isCartEmpty()) {
+  <div class="empty-cart">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <polyline points="9 22 9 12 15 12 15 22" />
+    </svg>
+    <p>Giỏ hàng của bạn đang trống</p>
+    <a routerLink="/products" class="btn-continue">Tiếp tục mua sắm</a>
+  </div>
+  } @else {
+  <div class="checkout-grid">
+    <!-- Shipping Form -->
+    <section class="shipping-form-section">
+      <h2>Thông tin giao hàng</h2>
+
+      @if (error()) {
+      <div class="alert alert-error" role="alert">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        <span>{{ error() }}</span>
+      </div>
+      }
+
+      @if (success()) {
+      <div class="alert alert-success" role="alert">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+          <polyline points="22 4 12 14.01 9 11.01" />
+        </svg>
+        <span>Đặt hàng thành công! Đang chuyển hướng...</span>
+      </div>
+      }
+
+      <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()" class="checkout-form" novalidate>
+        <!-- Full Name -->
+        <div class="form-group">
+          <label for="fullName" class="form-label">Họ tên <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <!-- <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg> -->
+            <input type="text" id="fullName" formControlName="fullName" class="form-input"
+              [class.error]="isFieldInvalid('fullName')" [class.success]="fullName?.valid && fullName?.dirty"
+              placeholder="Nguyễn Văn A" autocomplete="name" [disabled]="isLoading() || success()">
+          </div>
+          @if (isFieldInvalid('fullName')) {
+          <p class="form-error">{{ getFieldError('fullName') }}</p>
+          }
+        </div>
+
+        <!-- Shipping Address -->
+        <div class="form-group">
+          <label for="shippingAddress" class="form-label">Địa chỉ giao hàng <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <!-- <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg> -->
+            <textarea id="shippingAddress" formControlName="shippingAddress" class="form-input form-textarea"
+              [class.error]="isFieldInvalid('shippingAddress')"
+              [class.success]="shippingAddress?.valid && shippingAddress?.dirty"
+              placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố" autocomplete="street-address" rows="3"
+              [disabled]="isLoading() || success()"></textarea>
+          </div>
+          @if (isFieldInvalid('shippingAddress')) {
+          <p class="form-error">{{ getFieldError('shippingAddress') }}</p>
+          }
+        </div>
+
+        <!-- Phone Number -->
+        <div class="form-group">
+          <label for="phoneNumber" class="form-label">Số điện thoại <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <!-- <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2">
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg> -->
+            <input type="tel" id="phoneNumber" formControlName="phoneNumber" class="form-input"
+              [class.error]="isFieldInvalid('phoneNumber')" [class.success]="phoneNumber?.valid && phoneNumber?.dirty"
+              placeholder="0901234567" autocomplete="tel" [disabled]="isLoading() || success()">
+          </div>
+          @if (isFieldInvalid('phoneNumber')) {
+          <p class="form-error">{{ getFieldError('phoneNumber') }}</p>
+          }
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-submit"
+          [disabled]="checkoutForm.invalid || isLoading() || success() || isCartEmpty()">
+          @if (isLoading()) {
+          <span class="btn-spinner"></span>
+          <span>Đang xử lý...</span>
+          } @else {
+          <span>Đặt hàng - {{ totalAmount() | number:'1.0-0' }}đ</span>
+          }
+        </button>
+      </form>
+    </section>
+
+    <!-- Order Summary -->
+    <aside class="order-summary-section">
+      <div class="order-summary-card">
+        <h2>Tóm tắt đơn hàng</h2>
+
+        <div class="cart-items-summary">
+          @for (item of cartItems(); track item.productId) {
+          <div class="summary-item">
+            <div class="item-info">
+              <div class="item-image">
+                @if (item.imageUrl) {
+                <img [src]="item.imageUrl" [alt]="item.name" loading="lazy" />
+                } @else {
+                <div class="image-placeholder">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                </div>
+                }
+              </div>
+              <div class="item-details">
+                <span class="item-name">{{ item.name }}</span>
+                <span class="item-quantity">x{{ item.quantity }}</span>
+              </div>
+            </div>
+            <span class="item-total">{{ (item.price * item.quantity) | number:'1.0-0' }}đ</span>
+          </div>
+          }
+        </div>
+
+        <div class="summary-totals">
+          <div class="total-row">
+            <span>Tạm tính ({{ itemCount() }} sản phẩm)</span>
+            <span>{{ totalAmount() | number:'1.0-0' }}đ</span>
+          </div>
+          <div class="total-row">
+            <span>Phí vận chuyển</span>
+            <span class="free-ship">Miễn phí</span>
+          </div>
+          <div class="total-row grand-total">
+            <span>Tổng cộng</span>
+            <span>{{ totalAmount() | number:'1.0-0' }}đ</span>
+          </div>
+        </div>
+
+        <div class="secure-checkout">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+          <span>Thanh toán an toàn và bảo mật</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+  }
+</div>

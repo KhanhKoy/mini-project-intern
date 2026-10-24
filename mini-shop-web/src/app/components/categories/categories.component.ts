@@ -1,17 +1,18 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ProductService, Category } from '../../services/product.service';
 
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.css'
 })
 export class CategoriesComponent implements OnInit {
   private productService = inject(ProductService);
+  private router = inject(Router);
 
   // Signals for reactive state
   categories = signal<Category[]>([]);
@@ -37,6 +38,10 @@ export class CategoriesComponent implements OnInit {
         console.error('Error loading categories:', err);
       }
     });
+  }
+
+  onCategoryClick(categoryId: number): void {
+    this.router.navigate(['/products'], { queryParams: { categoryId } });
   }
 
   trackByCategoryId(index: number, category: Category): number {

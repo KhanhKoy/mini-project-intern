@@ -1,4 +1,5 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 export interface CartItem {
   productId: number;
@@ -21,11 +22,15 @@ export class CartService {
   readonly itemCount = computed(() => this.cartItemsSignal().reduce((sum, item) => sum + item.quantity, 0));
   readonly totalAmount = computed(() => this.cartItemsSignal().reduce((sum, item) => sum + item.price * item.quantity, 0));
 
-  constructor() {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.loadFromStorage();
   }
 
   private loadFromStorage(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     try {
       const stored = localStorage.getItem(this.storageKey);
       if (stored) {
@@ -37,6 +42,9 @@ export class CartService {
   }
 
   private saveToStorage(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
     localStorage.setItem(this.storageKey, JSON.stringify(this.cartItemsSignal()));
   }
 

@@ -35,7 +35,7 @@
       <div class="categories-grid" role="list" aria-label="Danh sách danh mục">
         @for (category of categories(); track trackByCategoryId($index, category)) {
           <article class="category-card" role="listitem">
-            <a [routerLink]="['/products']" [queryParams]="{ category: category.id }" class="category-link">
+            <div class="category-link" (click)="onCategoryClick(category.id)">
               <div class="category-image">
                 @if (category.imageUrl) {
                   <img [src]="category.imageUrl" [alt]="category.name" loading="lazy" />
@@ -57,7 +57,7 @@
                   {{ category.productCount || 0 }} sản phẩm
                 </span>
               </div>
-            </a>
+            </div>
           </article>
         }
       </div>
